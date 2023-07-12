@@ -51,6 +51,7 @@ class Play extends Component with HasGameRef<MainGame> {
                     [_playerPosition.x.toInt()] ==
                 0) {
               _playerPosition.y++;
+              _player.direction = PlayerDirection.down;
             }
             return true;
           },
@@ -59,6 +60,7 @@ class Play extends Component with HasGameRef<MainGame> {
                     [_playerPosition.x.toInt()] ==
                 0) {
               _playerPosition.y--;
+              _player.direction = PlayerDirection.up;
             }
             return true;
           },
@@ -67,6 +69,7 @@ class Play extends Component with HasGameRef<MainGame> {
                     [_playerPosition.x.toInt() + 1] ==
                 0) {
               _playerPosition.x++;
+              _player.direction = PlayerDirection.right;
             }
             return true;
           },
@@ -75,6 +78,7 @@ class Play extends Component with HasGameRef<MainGame> {
                     [_playerPosition.x.toInt() - 1] ==
                 0) {
               _playerPosition.x--;
+              _player.direction = PlayerDirection.left;
             }
             return true;
           },
