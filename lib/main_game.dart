@@ -1,8 +1,9 @@
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 
 import 'routes/routes.dart';
 
-class MainGame extends FlameGame {
+class MainGame extends FlameGame with HasKeyboardHandlerComponents {
   late final RouterComponent router;
 
   var score = 0;
