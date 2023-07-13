@@ -103,6 +103,7 @@ class Play extends Component with HasGameRef<MainGame> {
           -_dungeon.length * 0.5,
         ) +
         _playerPosition * _dungeon.length;
+    _dungeon.playerPosition = _playerPosition;
   }
 
   _initPlayerPosition() {

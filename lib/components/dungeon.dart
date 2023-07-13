@@ -9,13 +9,17 @@ class Dungeon extends PositionComponent with HasGameRef {
   final rows = 9 * seedScale;
   final random = Random();
 
-  late final RectangleComponent spritesContainer;
-  late final RectangleComponent guideContainer;
+  late final RectangleComponent _spritesContainer;
+  late final RectangleComponent _guideContainer;
   late final List<List<int>> map;
+  late final RectangleComponent _playerGuide;
+
+  var playerPosition = Vector2.zero();
 
   get seedColumns => columns ~/ seedScale;
   get seedRows => rows ~/ seedScale;
   get length => (game.size.y * 0.04).round();
+  get guideLength => game.size.y * 0.004;
 
   @override
   Future onLoad() async {
@@ -26,6 +30,22 @@ class Dungeon extends PositionComponent with HasGameRef {
     map = _generateMap();
     await _addGuide(map);
     await _addSprites(map);
+
+    _playerGuide = RectangleComponent(
+      size: Vector2.all(guideLength),
+      paint: Paint()..color = Colors.red,
+    );
+    _guideContainer.add(_playerGuide);
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    _playerGuide.position = Vector2(
+      playerPosition.x * guideLength,
+      playerPosition.y * guideLength,
+    );
   }
 
   List<List<int>> _generateSeed() {
@@ -114,15 +134,10 @@ class Dungeon extends PositionComponent with HasGameRef {
     return map;
   }
 
-  _printMap(List<List<int>> map) {
-    print(map.map((line) => line.join('')).join('\n'));
-  }
-
   Future _addGuide(List<List<int>> map) async {
-    final guideLength = game.size.y * 0.006;
-
-    final containerSize = Vector2(guideLength * columns, guideLength * rows);
-    guideContainer = RectangleComponent(
+    final containerSize =
+        Vector2(guideLength * (columns - 3), guideLength * (rows - 3));
+    _guideContainer = RectangleComponent(
       size: containerSize,
       position: Vector2(
         game.size.x - containerSize.x,
@@ -131,7 +146,7 @@ class Dungeon extends PositionComponent with HasGameRef {
       paint: Paint()..color = const Color(0x55FFFFFF),
       priority: 1,
     );
-    await game.add(guideContainer);
+    await game.add(_guideContainer);
 
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < columns; j++) {
@@ -139,10 +154,10 @@ class Dungeon extends PositionComponent with HasGameRef {
           continue;
         }
 
-        await guideContainer.add(
+        await _guideContainer.add(
           RectangleComponent(
             size: Vector2.all(guideLength),
-            position: Vector2(j * guideLength, i * guideLength),
+            position: Vector2(guideLength * j, guideLength * i),
             paint: Paint()..color = const Color(0xFFFFFFFF),
           ),
         );
@@ -156,25 +171,25 @@ class Dungeon extends PositionComponent with HasGameRef {
     final treeSprite = await Sprite.load('Tree.png');
 
     final containerSize = Vector2(length * columns, length * rows);
-    spritesContainer = RectangleComponent(
+    _spritesContainer = RectangleComponent(
       size: containerSize,
       paint: Paint()
         ..color = const Color(0x55FFFFFF)
         ..style = PaintingStyle.stroke
         ..strokeWidth = length,
     );
-    await add(spritesContainer);
+    await add(_spritesContainer);
 
-    await spritesContainer.add(
+    await _spritesContainer.add(
       SpriteComponent(
         sprite: grassSprite1,
-        size: spritesContainer.size,
+        size: _spritesContainer.size,
       ),
     );
 
     for (var i = 0; i < rows; i++) {
       for (var j = 0; j < columns; j++) {
-        await spritesContainer.add(
+        await _spritesContainer.add(
           SpriteComponent(
             sprite: i % 2 == j % 2 ? grassSprite1 : grassSprite2,
             size: Vector2.all(length),
@@ -182,7 +197,7 @@ class Dungeon extends PositionComponent with HasGameRef {
           ),
         );
         if (map[i][j] == 1) {
-          await spritesContainer.add(
+          await _spritesContainer.add(
             SpriteComponent(
               sprite: treeSprite,
               size: Vector2.all(length),
