@@ -3,7 +3,8 @@ import 'package:flame/game.dart';
 
 import 'routes/routes.dart';
 
-class MainGame extends FlameGame with HasKeyboardHandlerComponents {
+class MainGame extends FlameGame
+    with HasKeyboardHandlerComponents, HasCollisionDetection {
   late final RouterComponent router;
 
   var score = 0;
@@ -19,6 +20,7 @@ class MainGame extends FlameGame with HasKeyboardHandlerComponents {
         'home': Route(Home.new),
         'play': Route(Play.new, maintainState: false),
         'result': Route(Result.new),
+        'battle': TransparentRoute(Battle.new),
       },
       initialRoute: 'home',
     );

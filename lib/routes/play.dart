@@ -53,6 +53,8 @@ class Play extends Component with HasGameRef<MainGame> {
   void update(double dt) {
     super.update(dt);
 
+    _enemies.removeWhere((e) => e.parent == null);
+
     _guide.playerPosition = _player.positionInDungeon;
     _guide.enemyPositions = _enemies.map((e) => e.positionInDungeon).toList();
   }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
@@ -26,6 +27,19 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
       stepTime: 0.2,
       from: 1,
       to: 5,
+    );
+
+    await add(
+      RectangleHitbox(
+        size: Vector2(
+          size.x * 0.4,
+          size.y * 0.4,
+        ),
+        position: Vector2(
+          size.x * 0.25,
+          size.y * 0.25,
+        ),
+      ),
     );
   }
 

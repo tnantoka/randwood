@@ -1,8 +1,12 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/services.dart';
 
 import 'dungeon.dart';
+import 'enemy.dart';
+import '../main_game.dart';
+import '../main_state.dart';
 
 enum PlayerDirection {
   down,
@@ -11,7 +15,8 @@ enum PlayerDirection {
   left,
 }
 
-class Player extends SpriteAnimationComponent with HasGameRef {
+class Player extends SpriteAnimationComponent
+    with HasGameRef<MainGame>, CollisionCallbacks {
   Player({super.size, super.position, required this.dungeon});
 
   final Dungeon dungeon;
@@ -37,11 +42,26 @@ class Player extends SpriteAnimationComponent with HasGameRef {
   Future onLoad() async {
     await super.onLoad();
 
+    // debugMode = true;
+
     _spritesheet = SpriteSheet(
       image: await game.images.load('Human-Soldier-Cyan.png'),
       srcSize: Vector2.all(32),
     );
     _updateAnimation();
+
+    await add(
+      RectangleHitbox(
+        size: Vector2(
+          size.x * 0.4,
+          size.y * 0.4,
+        ),
+        position: Vector2(
+          size.x * 0.25,
+          size.y * 0.25,
+        ),
+      ),
+    );
 
     await add(
       KeyboardListenerComponent(
@@ -76,6 +96,19 @@ class Player extends SpriteAnimationComponent with HasGameRef {
           -dungeon.length * 0.5,
         ) +
         positionInDungeon * dungeon.length;
+  }
+
+  @override
+  Future onCollision(
+      Set<Vector2> intersectionPoints, PositionComponent other) async {
+    super.onCollision(intersectionPoints, other);
+
+    if (other is Enemy) {
+      MainState().onChange = () {
+        other.removeFromParent();
+      };
+      game.router.pushNamed('battle');
+    }
   }
 
   _updateAnimation() {
