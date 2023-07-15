@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class Dungeon extends PositionComponent with HasGameRef {
   static const seedScale = 7;
-  final columns = 11 * seedScale;
-  final rows = 9 * seedScale;
-  final random = Random();
+  final columns = 9 * seedScale;
+  final rows = 7 * seedScale;
+  final _random = Random();
 
   late final RectangleComponent _spritesContainer;
   late final List<List<int>> map;
@@ -49,7 +49,7 @@ class Dungeon extends PositionComponent with HasGameRef {
         var i2 = 0;
         var j2 = 0;
 
-        switch (random.nextInt(i == 2 ? 4 : 3)) {
+        switch (_random.nextInt(i == 2 ? 4 : 3)) {
           case 0:
             i2 = -1;
             j2 = 0;
@@ -85,7 +85,7 @@ class Dungeon extends PositionComponent with HasGameRef {
         final x = (j * seedScale).toInt() + (seedScale ~/ 2);
         final y = (i * seedScale).toInt() + (seedScale ~/ 2);
         if (seed[i][j] == 0) {
-          if (random.nextInt(100) < 20) {
+          if (_random.nextInt(100) < 20) {
             for (int i2 = -(seedScale ~/ 2); i2 <= (seedScale ~/ 2); i2++) {
               for (int j2 = -(seedScale ~/ 2); j2 <= (seedScale ~/ 2); j2++) {
                 map[y + i2][x + j2] = 0;

@@ -20,7 +20,7 @@ class MainGame extends FlameGame
         'home': Route(Home.new),
         'play': Route(Play.new, maintainState: false),
         'result': Route(Result.new),
-        'battle': TransparentRoute(Battle.new),
+        'battle': TransparentRoute(Battle.new, maintainState: false),
       },
       initialRoute: 'home',
     );

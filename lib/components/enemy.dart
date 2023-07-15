@@ -10,7 +10,7 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
   Enemy({super.size, required this.dungeon});
 
   final Dungeon dungeon;
-  final random = Random();
+  final _random = Random();
 
   var positionInDungeon = Vector2.zero();
 
@@ -25,8 +25,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
     animation = spritesheet.createAnimation(
       row: 0,
       stepTime: 0.2,
-      from: 1,
-      to: 5,
+      from: 0,
+      to: 6,
     );
 
     await add(
@@ -53,8 +53,8 @@ class Enemy extends SpriteAnimationComponent with HasGameRef {
         ) +
         positionInDungeon * dungeon.length;
 
-    if (random.nextInt(50) < 1) {
-      switch (random.nextInt(4)) {
+    if (_random.nextInt(50) < 1) {
+      switch (_random.nextInt(4)) {
         case 0:
           _moveDown();
           break;
